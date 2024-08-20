@@ -42,7 +42,8 @@ jobs:
     - name: Check if service2 is running
       id: check_service2
       run: |
-        if curl --head --silent --fail http://85.194.244.91:34954/d3d6d99a-add5-4b40-80b9-8722bc0a3d10 > /dev/null; then #这里改成你的Web服务的地址
+        response=$(curl --head --silent --fail --output /dev/null --write-out '%{http_code}' http://85.194.244.91:34954/d3d6d99a-add5-4b40-80b9-8722bc0a3d10)
+        if [ "$response" -eq 426 ]; then 
           echo "service_status=running" >> $GITHUB_ENV
         else
           echo "service_status=not_running" >> $GITHUB_ENV
