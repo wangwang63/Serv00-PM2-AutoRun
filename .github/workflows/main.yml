@@ -19,8 +19,8 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    - name: Check if service is running
-      id: check_service
+    - name: Check if service1 is running
+      id: check_service1
       run: |
         if curl --head --silent --fail http://85.194.244.91:50528/api/Keepaccount/66a5f20779d718a81fc6ccc0 > /dev/null; then #这里改成你的Web服务的地址
           echo "service_status=running" >> $GITHUB_ENV
@@ -29,6 +29,26 @@ jobs:
         fi
 
     - name: Run script on remote server if service is not running
-      if: env.service_status!= '9not_running'
-      run: ssh -o StrictHostKeyChecking=no dgahag@s7.serv00.com "/home/dgahag/run.sh";ssh -o StrictHostKeyChecking=no ascasd@s7.serv00.com "/home/ascasd/run.sh" #这里改成你的用户名@你的ssh服务器地址
+      if: env.service_status== 'not_running'
+      run: ssh -o StrictHostKeyChecking=no dgahag@s7.serv00.com "/home/dgahag/run.sh" #这里改成你的用户名@你的ssh服务器地址
+
+
+    - name: Setup SSH2
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      
+    - name: Check if service2 is running
+      id: check_service2
+      run: |
+        if curl --head --silent --fail http://85.194.244.91:34954/d3d6d99a-add5-4b40-80b9-8722bc0a3d10 > /dev/null; then #这里改成你的Web服务的地址
+          echo "service_status=running" >> $GITHUB_ENV
+        else
+          echo "service_status=not_running" >> $GITHUB_ENV
+        fi
+
+    - name: Run script on remote server if service is not running
+      if: env.service_status== 'not_running'
+      run: ssh -o StrictHostKeyChecking=no ascasd@s7.serv00.com "/home/ascasd/run.sh" #这里改成你的用户名@你的ssh服务器地址
 
