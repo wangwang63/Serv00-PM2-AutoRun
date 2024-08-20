@@ -29,6 +29,6 @@ jobs:
         fi
 
     - name: Run script on remote server if service is not running
-      if: env.service_status == 'not_running'
+      if: env.service_status!= '9not_running'
       run: ssh -o StrictHostKeyChecking=no dgahag@s7.serv00.com "/home/dgahag/run.sh";ssh -o StrictHostKeyChecking=no ascasd@s7.serv00.com "/home/ascasd/run.sh" #这里改成你的用户名@你的ssh服务器地址
 
